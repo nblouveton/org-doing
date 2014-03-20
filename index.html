@@ -45,6 +45,9 @@ later section lists things you want to work on later.</p>
 <h2>
 <a name="use-it" class="anchor" href="#use-it"><span class="octicon octicon-link"></span></a>Use it</h2>
 
+<h3>
+<a name="org-doing-functions" class="anchor" href="#org-doing-functions"><span class="octicon octicon-link"></span></a>Org-Doing Functions</h3>
+
 <p>Log what you're doing now:</p>
 
 <pre><code>M-x org-doing-log
@@ -53,6 +56,60 @@ later section lists things you want to work on later.</p>
 <p>Log what you're doing later:</p>
 
 <pre><code>C-u M-x org-doing-log
+</code></pre>
+
+<p>Log something you've already done:</p>
+
+<pre><code>M-x org-doing-done
+</code></pre>
+
+<p>Mark your most recent TODO as DONE:</p>
+
+<pre><code>M-x org-doing-done
+(don't enter anything and press Enter)
+</code></pre>
+
+<h3>
+<a name="org-doing-omni-function" class="anchor" href="#org-doing-omni-function"><span class="octicon octicon-link"></span></a>Org-Doing Omni Function</h3>
+
+<p>The omni function lets you enter short-hands at the beginning, making it very quick to use org-doing:</p>
+
+<pre><code>M-x org-doing
+now reviewing email, getting ready for a nap. seriously
+</code></pre>
+
+<p>The "now" is parsed and the <code>org-doing-log</code> function is called with
+the rest of the string. It's the same as doing this:</p>
+
+<pre><code>M-x org-doing-log
+reviewing email, getting ready for a nap. seriously
+</code></pre>
+
+<p>This is also works for later and for done:</p>
+
+<pre><code>M-x org-doing
+later adding more cool features to org-doing mode
+
+M-x org-doing
+done added something simply amazing to org-doing mode
+
+M-x org-doing
+done
+</code></pre>
+
+<h2>
+<a name="from-the-bash-command-line" class="anchor" href="#from-the-bash-command-line"><span class="octicon octicon-link"></span></a>From The Bash Command-Line</h2>
+
+<p>You can also use org-doing from the command line by defining the
+<code>ORG_DOING_PATH</code> environment variable to the location of
+<code>org-doing.el</code> and by sourcing <code>org-doing.bash</code>:</p>
+
+<pre><code>ORG_DOING_PATH=/path/to/org-doing.el
+source /path/to/org-doing.bash
+doing now awesome stuff
+doing later more awesome
+doing done something cool
+doing done
 </code></pre>
         </section>
 
