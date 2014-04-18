@@ -110,7 +110,6 @@ TODO item as DONE (see `org-doing-done-most-recent-item'.)"
 ;;;###autoload
 (defun org-doing (command)
   "Interactive function for running any org-doing command.
-
 The first part of the `command' string is parsed as a command:
 - now: calls `org-doing-log'
 - later: calls `org-doing-log'
@@ -118,8 +117,9 @@ The first part of the `command' string is parsed as a command:
 "
   (interactive "sDoing? ")
   (let* ((first-space (search " " command))
-         (cmd (downcase (subseq command 0 first-space)))
-         (args (subseq command (+ first-space 1))))
+         (safe-first-space (if first-space first-space (length command)))
+         (cmd (downcase (subseq command 0 safe-first-space)))
+         (args (if first-space (subseq command (+ safe-first-space 1)) (subseq command safe-first-space))))
     (cond ((string= cmd "now") (org-doing-log args))
           ((string= cmd "later") (org-doing-log args t))
           ((string= cmd "done") (org-doing-done args)))))
