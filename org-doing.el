@@ -32,21 +32,24 @@
   "Customization of org-doing"
   :version "0.1")
 
+
 (defcustom org-doing-file "~/doing.org"
   "The file where org-doing stores what you're doing now and later."
   :type '(string)
   :group 'org-doing)
 
-(defun org-doing-find-or-create-file ()
-  "Opens the `org-doing-file', if it doesn't exist, creates it.
 
-If it exists, goes to the beginning of the file."
+(defun org-doing-find-or-create-file ()
+  "Opens the `org-doing-file', if it doesn't exist, creates
+it. If it exists, goes to the beginning of the file."
   (find-file org-doing-file)
-  (if (file-exists-p org-doing-file)
-      (goto-char (point-min))
+  (unless (file-exists-p org-doing-file)
+    (goto-char (point-min))
     (insert "#+TITLE: doing\n"
             "#+STARTUP: overview\n"
-            "#+TODO: TODO LATER | DONE\n\n")))
+            "#+TODO: TODO LATER | DONE\n\n")
+    (save-buffer)))
+
 
 ;;;###autoload
 (defun org-doing-log (description &optional later-p)
