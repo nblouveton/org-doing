@@ -100,10 +100,12 @@ TODO item as DONE (see `org-doing-done-most-recent-item'.)"
                    "  " (format-time-string "<%Y-%m-%d %a %H:%M>\n"))))
   (save-buffer))
 
+
 (defun org-doing-done-most-recent-item ()
   "Marks the most recent item in `org-doing-file' as DONE."
-  (if (search-forward-regexp "^* TODO" nil t)
-    (replace-match "* DONE")))
+  (when (search-forward-regexp "^* TODO" nil t)
+    (replace-match "* DONE")
+    (funcall 'org-clock-out)))
 
 ;;;###autoload
 (defun org-doing (command)
