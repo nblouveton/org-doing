@@ -55,18 +55,32 @@ it. If it exists, goes to the beginning of the file."
 (defun org-doing-log (description &optional later-p)
   "Logs the `description' of what you're doing now in the file
 `org-doing-file' at the *top* of the file.
-
 When `later-p' is true, logs the item as something to be done
 later."
-  (interactive "sDoing? 
-P")
+  (interactive "sDoing? ")
   (org-doing-find-or-create-file)
-  (if (search-forward-regexp "^* " nil t)
-      (beginning-of-line)
-    (goto-char (point-max)))
-  (insert "* " (if (not (null later-p)) "LATER" "TODO") " " description "\n"
-          "  " (format-time-string "<%Y-%m-%d %a %H:%M>\n"))
+  (goto-char (point-min))
+
+  (cond ( (search-forward-regexp (format "^* DONE %s" description) nil t)
+          (beginning-of-line)
+          (replace-match (format "* TODO %s" description))
+          (funcall 'org-clock-in))
+        
+        ( (search-forward-regexp "^* " nil t)
+          (beginning-of-line)
+          (insert "* " (if (not (null later-p)) "LATER" "TODO") " " description "\n"
+                  "  " (format-time-string "<%Y-%m-%d %a %H:%M>\n"))
+          (search-backward-regexp "^* " nil t)
+          (funcall 'org-clock-in))
+        
+        (t (goto-char (point-min))
+           (insert "* " (if (not (null later-p)) "LATER" "TODO") " " description "\n"
+                   "  " (format-time-string "<%Y-%m-%d %a %H:%M>\n"))
+           (search-backward-regexp "^* " nil t)
+           (funcall 'org-clock-in)))
+  
   (save-buffer))
+
 
 (defun org-doing-done (description)
   "Inserts a new heading into `org-doing-file' that's marked as DONE.
