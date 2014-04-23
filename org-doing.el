@@ -47,7 +47,7 @@ it. If it exists, goes to the beginning of the file."
     (goto-char (point-min))
     (insert "#+TITLE: doing\n"
             "#+STARTUP: overview\n"
-            "#+TODO: TODO LATER | DONE\n\n")
+            "#+TODO: DOING LATER | DONE\n\n")
     (save-buffer)))
 
 
@@ -63,18 +63,18 @@ later."
 
   (cond ( (search-forward-regexp (format "^* DONE %s" description) nil t)
           (beginning-of-line)
-          (replace-match (format "* TODO %s" description))
+          (replace-match (format "* DOING %s" description))
           (funcall 'org-clock-in))
         
         ( (search-forward-regexp "^* " nil t)
           (beginning-of-line)
-          (insert "* " (if (not (null later-p)) "LATER" "TODO") " " description "\n"
+          (insert "* " (if (not (null later-p)) "LATER" "DOING") " " description "\n"
                   "  " (format-time-string "<%Y-%m-%d %a %H:%M>\n"))
           (search-backward-regexp "^* " nil t)
           (funcall 'org-clock-in))
         
         (t (goto-char (point-min))
-           (insert "* " (if (not (null later-p)) "LATER" "TODO") " " description "\n"
+           (insert "* " (if (not (null later-p)) "LATER" "DOING") " " description "\n"
                    "  " (format-time-string "<%Y-%m-%d %a %H:%M>\n"))
            (search-backward-regexp "^* " nil t)
            (funcall 'org-clock-in)))
@@ -85,13 +85,13 @@ later."
 (defun org-doing-done (description)
   "Inserts a new heading into `org-doing-file' that's marked as DONE.
 If `description' is nil or a blank string, marks the most recent
-TODO item as DONE (see `org-doing-done-most-recent-item'.)"
+DOING item as DONE (see `org-doing-done-most-recent-item'.)"
   (interactive "sDone? ")
   (find-file org-doing-file)
   (goto-char (point-min))
   (cond ( (= (length description) 0)
           (org-doing-done-most-recent-item))
-        ( (search-forward-regexp (format "^* TODO %s" description) nil t)
+        ( (search-forward-regexp (format "^* DOING %s" description) nil t)
           (beginning-of-line)
           (replace-match (format "* DONE %s" description))
           (funcall 'org-clock-out))
@@ -103,7 +103,7 @@ TODO item as DONE (see `org-doing-done-most-recent-item'.)"
 
 (defun org-doing-done-most-recent-item ()
   "Marks the most recent item in `org-doing-file' as DONE."
-  (when (search-forward-regexp "^* TODO" nil t)
+  (when (search-forward-regexp "^* DOING" nil t)
     (replace-match "* DONE")
     (funcall 'org-clock-out)))
 
