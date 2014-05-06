@@ -47,15 +47,15 @@ it. If it exists, goes to the beginning of the file."
     (goto-char (point-min))
     (insert "#+TITLE: doing\n"
             "#+STARTUP: overview\n"
-            "#+TODO: DOING LATER | DONE\n\n")
+            "#+TODO: DOING TODO | DONE\n\n")
     (save-buffer)))
 
 
 ;;;###autoload
-(defun org-doing-log (description &optional later-p)
+(defun org-doing-log (description &optional todo-p)
   "Logs the `description' of what you're doing now in the file
 `org-doing-file' at the *top* of the file.
-When `later-p' is true, logs the item as something to be done
+When `todo-p' is true, logs the item as something to be done
 later."
   (interactive "sDoing? ")
   (org-doing-find-or-create-file)
@@ -68,13 +68,13 @@ later."
         
         ( (search-forward-regexp "^* " nil t)
           (beginning-of-line)
-          (insert "* " (if (not (null later-p)) "LATER" "DOING") " " description "\n"
+          (insert "* " (if (not (null todo-p)) "TODO" "DOING") " " description "\n"
                   "  " (format-time-string "<%Y-%m-%d %a %H:%M>\n"))
           (search-backward-regexp "^* " nil t)
           (funcall 'org-clock-in))
         
         (t (goto-char (point-min))
-           (insert "* " (if (not (null later-p)) "LATER" "DOING") " " description "\n"
+           (insert "* " (if (not (null todo-p)) "TODO" "DOING") " " description "\n"
                    "  " (format-time-string "<%Y-%m-%d %a %H:%M>\n"))
            (search-backward-regexp "^* " nil t)
            (funcall 'org-clock-in)))
@@ -112,7 +112,7 @@ DOING item as DONE (see `org-doing-done-most-recent-item'.)"
   "Interactive function for running any org-doing command.
 The first part of the `command' string is parsed as a command:
 - now: calls `org-doing-log'
-- later: calls `org-doing-log'
+- todo: calls `org-doing-log'
 - done: calls `org-doing-done'
 "
   (interactive "sDoing? ")
@@ -121,7 +121,7 @@ The first part of the `command' string is parsed as a command:
          (cmd (downcase (subseq command 0 safe-first-space)))
          (args (if first-space (subseq command (+ safe-first-space 1)) (subseq command safe-first-space))))
     (cond ((string= cmd "now") (org-doing-log args))
-          ((string= cmd "later") (org-doing-log args t))
+          ((string= cmd "todo") (org-doing-log args t))
           ((string= cmd "done") (org-doing-done args)))))
 
 ;;; org-doing.el ends here
