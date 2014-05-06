@@ -72,12 +72,12 @@ later."
         
         ( (search-forward-regexp "^* " nil t)
           (beginning-of-line)
-          (insert-activity (if (not (null todo-p)) "TODO" "DOING") description)
+          (insert-activity (if (null todo-p) "DOING" "TODO") description)
           (search-backward-regexp "^* " nil t)
           (funcall 'org-clock-in))
         
         (t (goto-char (point-min))
-           (insert-activity (if (not (null todo-p)) "TODO" "DOING") description)
+           (insert-activity (if (null todo-p) "DOING" "TODO") description)
            (search-backward-regexp "^* " nil t)
            (funcall 'org-clock-in)))
   
