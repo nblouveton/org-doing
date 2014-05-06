@@ -51,6 +51,10 @@ it. If it exists, goes to the beginning of the file."
     (save-buffer)))
 
 
+(defun insert-activity (state description)
+  (insert "* " state " " description "\n"
+          "  " (format-time-string "<%Y-%m-%d %a %H:%M>\n")))
+
 ;;;###autoload
 (defun org-doing-log (description &optional todo-p)
   "Logs the `description' of what you're doing now in the file
@@ -68,14 +72,12 @@ later."
         
         ( (search-forward-regexp "^* " nil t)
           (beginning-of-line)
-          (insert "* " (if (not (null todo-p)) "TODO" "DOING") " " description "\n"
-                  "  " (format-time-string "<%Y-%m-%d %a %H:%M>\n"))
+          (insert-activity (if (not (null todo-p)) "TODO" "DOING") description)
           (search-backward-regexp "^* " nil t)
           (funcall 'org-clock-in))
         
         (t (goto-char (point-min))
-           (insert "* " (if (not (null todo-p)) "TODO" "DOING") " " description "\n"
-                   "  " (format-time-string "<%Y-%m-%d %a %H:%M>\n"))
+           (insert-activity (if (not (null todo-p)) "TODO" "DOING") description)
            (search-backward-regexp "^* " nil t)
            (funcall 'org-clock-in)))
   
@@ -96,8 +98,7 @@ DOING item as DONE (see `org-doing-done-most-recent-item'.)"
           (replace-match (format "* DONE %s" description))
           (funcall 'org-clock-out))
         (t (goto-char (point-min))
-           (insert "* DONE " description "\n"
-                   "  " (format-time-string "<%Y-%m-%d %a %H:%M>\n"))))
+           (insert-activity "DONE" description)))
   (save-buffer))
 
 
